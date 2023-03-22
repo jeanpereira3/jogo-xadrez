@@ -2,13 +2,17 @@ package chess.pieces;
 
 import boardgame.Board;
 import boardgame.Position;
+import chess.ChessMatch;
 import chess.ChessPiece;
 import chess.Color;
 
 public class Pawn extends ChessPiece {
+	
+	private ChessMatch chessMatch;
 
-	public Pawn(Board board, Color color) {
+	public Pawn(Board board, Color color, ChessMatch chessMatch) {
 		super(board, color);
+		this.chessMatch = chessMatch;
 	}
 
 	@Override
@@ -43,6 +47,26 @@ public class Pawn extends ChessPiece {
 			if (getBoard().positionExists(p) && isthereOpponenrPiece(p)) {
 				mat[p.getRow()][p.getColumn()] = true;
 			}
+			
+			if(position.getRow() == 3) {
+				Position l = new Position(position.getRow(), position.getColumn() - 1);
+				if(
+						getBoard().positionExists(l) &&
+						isthereOpponenrPiece(l) &&
+						getBoard().piece(l) == chessMatch.getEnPassantVulnerable()
+						) {
+					mat[l.getRow() - 1][l.getColumn()] = true;
+				}
+				
+				Position r = new Position(position.getRow(), position.getColumn() + 1);
+				if(
+						getBoard().positionExists(r) &&
+						isthereOpponenrPiece(r) &&
+						getBoard().piece(r) == chessMatch.getEnPassantVulnerable()
+						) {
+					mat[r.getRow() - 1][r.getColumn()] = true;
+				}
+			}
 		} else {
 			p.setValues(position.getRow() + 1, position.getColumn());
 			if (getBoard().positionExists(p) && !getBoard().thereIsAPiece(p)) {
@@ -67,6 +91,26 @@ public class Pawn extends ChessPiece {
 			p.setValues(position.getRow() + 1, position.getColumn() + 1);
 			if (getBoard().positionExists(p) && isthereOpponenrPiece(p)) {
 				mat[p.getRow()][p.getColumn()] = true;
+			}
+			
+			if(position.getRow() == 4) {
+				Position l = new Position(position.getRow(), position.getColumn() - 1);
+				if(
+						getBoard().positionExists(l) &&
+						isthereOpponenrPiece(l) &&
+						getBoard().piece(l) == chessMatch.getEnPassantVulnerable()
+						) {
+					mat[l.getRow() + 1][l.getColumn()] = true;
+				}
+				
+				Position r = new Position(position.getRow(), position.getColumn() + 1);
+				if(
+						getBoard().positionExists(r) &&
+						isthereOpponenrPiece(r) &&
+						getBoard().piece(r) == chessMatch.getEnPassantVulnerable()
+						) {
+					mat[r.getRow() + 1][r.getColumn()] = true;
+				}
 			}
 		}
 		return mat;
